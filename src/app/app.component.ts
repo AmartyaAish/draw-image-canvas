@@ -9,9 +9,17 @@ import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 export class AppComponent {
   @ViewChild('myCanvas') myCanvas: ElementRef;
   image = new Image();
+  url: string;
+
   constructor() {}
 
-  url: string;
+  ngOnInit() {}
+
+  ngAfterViewInit() {
+    this.myCanvas.nativeElement.addEventListener('mousedown', (e: any) => {
+      this.getMousePosition(e);
+    });
+  }
 
   selectFile(event: any): void {
     if (event.target.files) {
@@ -46,13 +54,5 @@ export class AppComponent {
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
     console.log('Coordinate x: ' + x, 'Coordinate y: ' + y);
-  }
-
-  ngOnInit() {}
-
-  ngAfterViewInit() {
-    this.myCanvas.nativeElement.addEventListener('mousedown', (e: any) => {
-      this.getMousePosition(e);
-    });
   }
 }
