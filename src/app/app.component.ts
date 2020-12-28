@@ -1,4 +1,5 @@
 import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
+// import { fabric } from 'fabric';
 
 @Component({
   selector: 'app-root',
@@ -40,5 +41,18 @@ export class AppComponent {
     }
   }
 
+  getMousePosition(event: any) {
+    let rect = this.myCanvas.nativeElement.getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+    console.log('Coordinate x: ' + x, 'Coordinate y: ' + y);
+  }
+
   ngOnInit() {}
+
+  ngAfterViewInit() {
+    this.myCanvas.nativeElement.addEventListener('mousedown', (e: any) => {
+      this.getMousePosition(e);
+    });
+  }
 }
