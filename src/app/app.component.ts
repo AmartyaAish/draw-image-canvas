@@ -10,6 +10,7 @@ export class AppComponent {
   @ViewChild('myCanvas') myCanvas: ElementRef;
   image = new Image();
   url: string;
+  isDrawn: boolean = false;
 
   constructor() {}
 
@@ -44,15 +45,18 @@ export class AppComponent {
         // ctx.canvas.height =
         // this.myCanvas.nativeElement.width = this.image.width;
         // this.myCanvas.nativeElement.height = this.image.height;
+        this.isDrawn = true;
         ctx.drawImage(this.image, 0, 0, 1280, 720);
       };
     }
   }
 
   getMousePosition(event: any) {
-    let rect = this.myCanvas.nativeElement.getBoundingClientRect();
-    let x = event.clientX - rect.left;
-    let y = event.clientY - rect.top;
-    console.log('Coordinate x: ' + x, 'Coordinate y: ' + y);
+    if (this.isDrawn) {
+      let rect = this.myCanvas.nativeElement.getBoundingClientRect();
+      let x = event.clientX - rect.left;
+      let y = event.clientY - rect.top;
+      console.log('Coordinate x: ' + x, 'Coordinate y: ' + y);
+    }
   }
 }
