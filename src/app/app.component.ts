@@ -1,5 +1,6 @@
 // import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
-// // import { fabric } from 'fabric';
+// import 'fabric';
+// declare const fabric: any;
 
 // @Component({
 //   selector: 'app-root',
@@ -61,11 +62,11 @@
 //   }
 // }
 
-//LAKSHAY SIR CODE
+//LAKSHAY SIR CORRECTION
 import { Component, OnInit } from '@angular/core';
-import { fabric } from 'fabric';
-// import 'fabric';
-// declare const fabric: any;
+
+import 'fabric';
+declare const fabric: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -82,54 +83,24 @@ export class AppComponent implements OnInit {
       y: 3
     },
     {
-      x: 30,
-      y: 5
-    },
-    {
       x: 25,
       y: 55
     },
     {
       x: 19,
       y: 44
-    },
-    {
-      x: 15,
-      y: 30
-    },
-    {
-      x: 15,
-      y: 55
-    },
-    {
-      x: 9,
-      y: 55
-    },
-    {
-      x: 6,
-      y: 53
-    },
-    {
-      x: -2,
-      y: 55
-    },
-    {
-      x: -4,
-      y: 40
-    },
-    {
-      x: 0,
-      y: 20
     }
   ];
   canvas: any;
+
+  image = new Image();
   ngOnInit() {
     this.canvas = new fabric.Canvas('canvas');
     const polygon = new fabric.Polygon(this.points, {
       left: 100,
       top: 50,
-      fill: '#D81B60',
-      strokeWidth: 4,
+      fill: 'lightyellow',
+      strokeWidth: 1,
       stroke: 'green',
       scaleX: 4,
       scaleY: 4,
@@ -140,6 +111,7 @@ export class AppComponent implements OnInit {
     this.canvas.viewportTransform = [0.7, 0, 0, 0.7, -50, 50];
     this.canvas.add(polygon);
   }
+
   public Edit() {
     function polygonPositionHandler(dim, finalMatrix, fabricObject) {
       let x =
@@ -204,16 +176,15 @@ export class AppComponent implements OnInit {
       let lastControl = poly.points.length - 1;
       poly.cornerStyle = 'circle';
       poly.cornerColor = 'rgba(0,0,255,0.5)';
-
       poly.controls = poly.points.reduce(function(acc, point, index) {
         acc['p' + index] = new fabric['Control']({
+          pointIndex: index,
           positionHandler: polygonPositionHandler,
           actionHandler: anchorWrapper(
             index > 0 ? index - 1 : lastControl,
             actionHandler
           ),
-          actionName: 'modifyPolygon',
-          pointIndex: index
+          actionName: 'modifyPolygon'
         });
         return acc;
       }, {});
