@@ -1,4 +1,10 @@
-import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
+import {
+  ViewChild,
+  ElementRef,
+  Component,
+  OnInit,
+  AfterViewInit
+} from '@angular/core';
 import 'fabric';
 declare const fabric: any;
 
@@ -7,32 +13,30 @@ declare const fabric: any;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewInit {
   // @ViewChild('myCanvas') myCanvas: ElementRef;
   myCanvas: any;
   image = new Image();
   url: string;
-  isDrawn: boolean = false;
+  isCanvasDrawn: boolean = true;
   canvas: any;
-  checkCanvas: any;
+  polygon: any;
+  isDrawing: boolean = true;
+
+  newPt: any;
   constructor() {}
 
-  // ngOnInit() {
-  //   this.canvas = new fabric.Canvas('canvas');
-  //   this.checkCanvas = this.canvas.lowerCanvasEl;
-  //   console.log('checkCanvas', this.checkCanvas);
-  // }
-
   ngAfterViewInit() {
-    // console.log('this.mycanvas', this.myCanvas);
-    // console.log('this.myCanvas.nativeElement', this.myCanvas.nativeElement);
-    console.log('this.myCanvas', this.myCanvas);
-    // this.myCanvas.addEventListener('mousedown', (e: any) => {
-    //   this.getMousePosition(e);
-    // });
     this.canvas.on('mouse:up', options => {
-      // console.log(options.e.layerX, options.e.layerY);
-      this.getMousePosition(options.e);
+      if (options.button === 1) {
+        this.getClickCoords(options.e);
+      }
+    });
+
+    this.canvas.on('mouse:down', event => {
+      if (event.button === 3) {
+        this.makePolygon();
+      }
     });
   }
 
@@ -47,49 +51,50 @@ export class AppComponent {
       let ctx: CanvasRenderingContext2D = this.myCanvas.getContext('2d');
       this.image.onload = () => {
         ctx.clearRect(0, 0, this.myCanvas.width, this.myCanvas.height);
-        this.isDrawn = true;
+        this.isCanvasDrawn = true;
         ctx.drawImage(this.image, 0, 0, 1280, 720);
       };
     }
   }
 
-  getMousePosition(event: any) {
-    console.log('function calling');
-    if (this.isDrawn) {
-      // let rect = this.myCanvas.getBoundingClientRect();
-      console.log(event.layerX, event.layerY);
-      // let x = event.clientX - rect.left;
-      // let y = event.clientY - rect.top;
-      // console.log('Coordinate x: ' + x, 'Coordinate y: ' + y);
+  getClickCoords(event: any) {
+    if (this.isCanvasDrawn && this.isDrawing) {
+      console.log(
+        'Coordinate x: ' + event.layerX,
+        'Coordinate y: ' + event.layerY
+      );
+
+      this.newPt = {
+        x: event.layerX,
+        y: event.layerY
+      };
+      this.points.push(this.newPt);
     }
   }
 
-  //LAKSHAY SIR CORRECTION
-  points = [
-    {
-      x: 3,
-      y: 4
-    },
-    {
-      x: 16,
-      y: 3
-    },
-    {
-      x: 25,
-      y: 55
-    },
-    {
-      x: 19,
-      y: 44
-    }
-  ];
+  makePolygon() {
+    this.isDrawing = false;
+    console.log('right click makePolygon');
+    this.canvas.add(this.polygon);
+  }
+
+  // clearPolygon() {
+  //   this.points = [];
+  // }
+
+  //POLYGON CODE
+  points = [];
 
   // image = new Image(); //ALREADY INITIALISED ABOVE
   ngOnInit() {
-    this.canvas = new fabric.Canvas('canvas');
+    this.canvas = new fabric.Canvas('canvas', { fireRightClick: true });
     console.log('this.canvas.lowerCanvasEl', this.canvas.lowerCanvasEl);
     this.myCanvas = this.canvas.lowerCanvasEl;
-    const polygon = new fabric.Polygon(this.points, {
+    // this.canvas.isDrawingMode = true;
+    // this.canvas.freeDrawingBrush.color = 'green';
+    // this.canvas.freeDrawingBrush.width = 50;
+
+    this.polygon = new fabric.Polygon(this.points, {
       left: 100,
       top: 50,
       fill: 'lightyellow',
@@ -101,12 +106,13 @@ export class AppComponent {
       transparentCorners: false,
       cornerColor: 'blue'
     });
-    this.canvas.viewportTransform = [0.7, 0, 0, 0.7, -50, 50];
-    this.canvas.add(polygon);
-    // console.log('isDrawn', this.isDrawn);
+    this.canvas.viewportTransform = [0.1, 0, 0, 0.1, 0, 0];
+    // this.canvas.add(this.polygon);
+    // console.log('isCanvasDrawn', this.isCanvasDrawn);
   }
 
   public Edit() {
+    // this.canvas.isDrawingMode = false;
     function polygonPositionHandler(dim, finalMatrix, fabricObject) {
       let x =
           fabricObject.points[this.pointIndex].x - fabricObject.pathOffset.x,
@@ -191,133 +197,3 @@ export class AppComponent {
     this.canvas.requestRenderAll();
   }
 }
-
-//LAKSHAY SIR CORRECTION
-
-// export class AppComponent implements OnInit {
-//   points = [
-//     {
-//       x: 3,
-//       y: 4
-//     },
-//     {
-//       x: 16,
-//       y: 3
-//     },
-//     {
-//       x: 25,
-//       y: 55
-//     },
-//     {
-//       x: 19,
-//       y: 44
-//     }
-//   ];
-//   canvas: any;
-
-//   image = new Image();
-//   ngOnInit() {
-//     this.canvas = new fabric.Canvas('canvas');
-//     console.log(this.canvas);
-
-//     const polygon = new fabric.Polygon(this.points, {
-//       left: 100,
-//       top: 50,
-//       fill: 'lightyellow',
-//       strokeWidth: 1,
-//       stroke: 'green',
-//       scaleX: 4,
-//       scaleY: 4,
-//       objectCaching: false,
-//       transparentCorners: false,
-//       cornerColor: 'blue'
-//     });
-//     this.canvas.viewportTransform = [0.7, 0, 0, 0.7, -50, 50];
-//     this.canvas.add(polygon);
-//   }
-
-//   public Edit() {
-//     function polygonPositionHandler(dim, finalMatrix, fabricObject) {
-//       let x =
-//           fabricObject.points[this.pointIndex].x - fabricObject.pathOffset.x,
-//         y = fabricObject.points[this.pointIndex].y - fabricObject.pathOffset.y;
-//       return fabric.util.transformPoint(
-//         new fabric.Point(x, y),
-//         fabric.util.multiplyTransformMatrices(
-//           fabricObject.canvas.viewportTransform,
-//           fabricObject.calcTransformMatrix()
-//         )
-//       );
-//     }
-//     function anchorWrapper(anchorIndex, fn) {
-//       return function(eventData, transform, x, y) {
-//         var fabricObject = transform.target,
-//           absolutePoint = fabric.util.transformPoint(
-//             new fabric.Point(
-//               fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x,
-//               fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y
-//             ),
-//             fabricObject.calcTransformMatrix()
-//           ),
-//           actionPerformed = fn(eventData, transform, x, y),
-//           newDim = fabricObject._setPositionDimensions({}),
-//           polygonBaseSize = fabricObject._getNonTransformedDimensions(),
-//           newX =
-//             (fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x) /
-//             polygonBaseSize.x,
-//           newY =
-//             (fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y) /
-//             polygonBaseSize.y;
-//         fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
-//         return actionPerformed;
-//       };
-//     }
-//     function actionHandler(eventData, transform, x, y) {
-//       var polygon = transform.target,
-//         currentControl = polygon.controls[polygon.__corner],
-//         mouseLocalPosition = polygon.toLocalPoint(
-//           new fabric.Point(x, y),
-//           'center',
-//           'center'
-//         ),
-//         polygonBaseSize = polygon._getNonTransformedDimensions(),
-//         size = polygon._getTransformedDimensions(0, 0),
-//         finalPointPosition = {
-//           x:
-//             (mouseLocalPosition.x * polygonBaseSize.x) / size.x +
-//             polygon.pathOffset.x,
-//           y:
-//             (mouseLocalPosition.y * polygonBaseSize.y) / size.y +
-//             polygon.pathOffset.y
-//         };
-//       polygon.points[currentControl.pointIndex] = finalPointPosition;
-//       return true;
-//     }
-//     let poly = this.canvas.getObjects()[0];
-//     this.canvas.setActiveObject(poly);
-//     poly.edit = !poly.edit;
-//     if (poly.edit) {
-//       let lastControl = poly.points.length - 1;
-//       poly.cornerStyle = 'circle';
-//       poly.cornerColor = 'rgba(0,0,255,0.5)';
-//       poly.controls = poly.points.reduce(function(acc, point, index) {
-//         acc['p' + index] = new fabric['Control']({
-//           pointIndex: index,
-//           positionHandler: polygonPositionHandler,
-//           actionHandler: anchorWrapper(
-//             index > 0 ? index - 1 : lastControl,
-//             actionHandler
-//           ),
-//           actionName: 'modifyPolygon'
-//         });
-//         return acc;
-//       }, {});
-//     } else {
-//       poly.cornerColor = 'blue';
-//       poly.cornerStyle = 'rect';
-//       poly.controls = fabric.Object.prototype['controls'];
-//     }
-//     poly.hasBorders = !poly.edit;
-//     this.canvas.requestRenderAll();
-//   }
-// }
