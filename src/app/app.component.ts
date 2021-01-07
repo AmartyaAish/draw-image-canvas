@@ -8,21 +8,31 @@ declare const fabric: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @ViewChild('myCanvas') myCanvas: ElementRef;
+  // @ViewChild('myCanvas') myCanvas: ElementRef;
+  myCanvas: any;
   image = new Image();
   url: string;
   isDrawn: boolean = false;
-
+  canvas: any;
+  checkCanvas: any;
   constructor() {}
 
-  // ngOnInit() {}
+  // ngOnInit() {
+  //   this.canvas = new fabric.Canvas('canvas');
+  //   this.checkCanvas = this.canvas.lowerCanvasEl;
+  //   console.log('checkCanvas', this.checkCanvas);
+  // }
 
   ngAfterViewInit() {
-    console.log('this.mycanvas', this.myCanvas);
-    console.log('this.myCanvas.nativeElement', this.myCanvas.nativeElement);
-
-    this.myCanvas.nativeElement.addEventListener('mousedown', (e: any) => {
-      this.getMousePosition(e);
+    // console.log('this.mycanvas', this.myCanvas);
+    // console.log('this.myCanvas.nativeElement', this.myCanvas.nativeElement);
+    console.log('this.myCanvas', this.myCanvas);
+    // this.myCanvas.addEventListener('mousedown', (e: any) => {
+    //   this.getMousePosition(e);
+    // });
+    this.canvas.on('mouse:up', options => {
+      // console.log(options.e.layerX, options.e.layerY);
+      this.getMousePosition(options.e);
     });
   }
 
@@ -34,21 +44,9 @@ export class AppComponent {
         this.url = event.target.result;
         this.image.src = this.url;
       };
-
-      let ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext(
-        '2d'
-      );
-
+      let ctx: CanvasRenderingContext2D = this.myCanvas.getContext('2d');
       this.image.onload = () => {
-        ctx.clearRect(
-          0,
-          0,
-          this.myCanvas.nativeElement.width,
-          this.myCanvas.nativeElement.height
-        );
-        // ctx.canvas.height =
-        // this.myCanvas.nativeElement.width = this.image.width;
-        // this.myCanvas.nativeElement.height = this.image.height;
+        ctx.clearRect(0, 0, this.myCanvas.width, this.myCanvas.height);
         this.isDrawn = true;
         ctx.drawImage(this.image, 0, 0, 1280, 720);
       };
@@ -56,16 +54,17 @@ export class AppComponent {
   }
 
   getMousePosition(event: any) {
+    console.log('function calling');
     if (this.isDrawn) {
-      let rect = this.myCanvas.nativeElement.getBoundingClientRect();
-      let x = event.clientX - rect.left;
-      let y = event.clientY - rect.top;
-      console.log('Coordinate x: ' + x, 'Coordinate y: ' + y);
+      // let rect = this.myCanvas.getBoundingClientRect();
+      console.log(event.layerX, event.layerY);
+      // let x = event.clientX - rect.left;
+      // let y = event.clientY - rect.top;
+      // console.log('Coordinate x: ' + x, 'Coordinate y: ' + y);
     }
   }
 
   //LAKSHAY SIR CORRECTION
-
   points = [
     {
       x: 3,
@@ -84,13 +83,12 @@ export class AppComponent {
       y: 44
     }
   ];
-  canvas: any;
 
   // image = new Image(); //ALREADY INITIALISED ABOVE
   ngOnInit() {
     this.canvas = new fabric.Canvas('canvas');
     console.log('this.canvas.lowerCanvasEl', this.canvas.lowerCanvasEl);
-
+    this.myCanvas = this.canvas.lowerCanvasEl;
     const polygon = new fabric.Polygon(this.points, {
       left: 100,
       top: 50,
@@ -105,6 +103,7 @@ export class AppComponent {
     });
     this.canvas.viewportTransform = [0.7, 0, 0, 0.7, -50, 50];
     this.canvas.add(polygon);
+    // console.log('isDrawn', this.isDrawn);
   }
 
   public Edit() {
