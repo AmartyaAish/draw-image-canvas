@@ -97,8 +97,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     // this.canvas.freeDrawingBrush.width = 50;
 
     this.polygon = new fabric.Polygon(this.points, {
-      left: 100,
-      top: 50,
+      left: 0,
+      top: 0,
       fill: 'lightyellow',
       strokeWidth: 1,
       stroke: 'green',
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       transparentCorners: false,
       cornerColor: 'blue'
     });
-    this.canvas.viewportTransform = [0.1, 0, 0, 0.1, 0, 0];
+    this.canvas.viewportTransform = [0.25, 0, 0, 0.25, 0, 0];
     // this.canvas.add(this.polygon);
     // console.log('isCanvasDrawn', this.isCanvasDrawn);
   }
