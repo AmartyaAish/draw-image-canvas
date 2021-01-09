@@ -69,13 +69,15 @@ export class AppComponent implements OnInit, AfterViewInit {
         y: event.layerY
       };
       this.points.push(this.newPt);
+      this.canvas.add(this.polygon);
     }
   }
 
   makePolygon() {
     this.isDrawing = false;
     console.log('right click makePolygon');
-    this.canvas.add(this.polygon);
+    // this.canvas.add(this.polygon);
+    console.log(this.points);
   }
 
   // clearPolygon() {
