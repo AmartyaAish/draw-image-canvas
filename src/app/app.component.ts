@@ -41,9 +41,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   selectFile(event: any): void {
+    // var canvas = new fabric.Canvas('canvas');
     if (event.target.files) {
       var reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
       reader.onload = (event: any) => {
         this.url = event.target.result;
         this.image.src = this.url;
@@ -54,7 +56,35 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.isCanvasDrawn = true;
         ctx.drawImage(this.image, 0, 0, 1280, 720);
       };
+      // fabric.Image.fromURL(this.url, function(img) {
+      //   canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+      //     scaleX: canvas.width / img.width,
+      //     scaleY: canvas.height / img.height
+      //   });
+      // });
     }
+    // var canvas = new fabric.Canvas('canvas');
+    // //Default
+
+    // canvas.backgroundColor = '#34AD39';
+    // canvas.renderAll();
+    // //Change background using Image
+    // document.getElementById('bg_image').addEventListener('change', function(e) {
+    //   canvas.setBackgroundColor('', canvas.renderAll.bind(canvas));
+    //   canvas.setBackgroundImage(0, canvas.renderAll.bind(canvas));
+    //   var file = e.target.files[0];
+    //   var reader = new FileReader();
+    //   reader.onload = function(f) {
+    //     var data = f.target.result;
+    //     fabric.Image.fromURL(data, function(img) {
+    //       canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+    //         scaleX: canvas.width / img.width,
+    //         scaleY: canvas.height / img.height
+    //       });
+    //     });
+    //   };
+    //   reader.readAsDataURL(file);
+    // });
   }
 
   getClickCoords(event: any) {
@@ -90,6 +120,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // image = new Image(); //ALREADY INITIALISED ABOVE
   ngOnInit() {
     this.canvas = new fabric.Canvas('canvas', { fireRightClick: true });
+    console.log('canvas check', this.canvas);
     console.log('this.canvas.lowerCanvasEl', this.canvas.lowerCanvasEl);
     this.myCanvas = this.canvas.lowerCanvasEl;
     // this.canvas.isDrawingMode = true;
