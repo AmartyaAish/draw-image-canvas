@@ -21,7 +21,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   isCanvasDrawn: boolean = true;
   canvas: any;
   polygon: any;
-  isDrawing: boolean = true;
+  isDrawing: boolean = false;
 
   newPt: any;
   constructor() {}
@@ -76,6 +76,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       //   this.isCanvasDrawn = true;
       //   ctx.drawImage(this.image, 0, 0, 1280, 720);
       // };
+      this.isDrawing = true;
     }
   }
 
