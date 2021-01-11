@@ -22,9 +22,28 @@ export class AppComponent implements OnInit, AfterViewInit {
   canvas: any;
   polygon: any;
   isDrawing: boolean = false;
-
+  points = [];
   newPt: any;
   constructor() {}
+
+  ngOnInit() {
+    this.canvas = new fabric.Canvas('canvas', { fireRightClick: true });
+    this.myCanvas = this.canvas.lowerCanvasEl;
+
+    this.polygon = new fabric.Polygon(this.points, {
+      left: 0,
+      top: 0,
+      fill: 'rgba(255,0,0,0.1)',
+      strokeWidth: 1.5,
+      stroke: 'lightgrey',
+      scaleX: 1,
+      scaleY: 1,
+      objectCaching: false,
+      transparentCorners: false,
+      cornerColor: 'blue'
+    });
+    this.canvas.viewportTransform = [1, 0, 0, 1, 0, 0];
+  }
 
   ngAfterViewInit() {
     this.canvas.on('mouse:up', options => {
@@ -48,21 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       reader.readAsDataURL(file);
       reader.onload = (event: any) => {
         this.url = event.target.result;
-        // var pugImg = this.image;
-        // pugImg.onload = function(img) {
-        //   var pug = new fabric.Image(pugImg, {
-        //     angle: 0,
-        //     width: 1280,
-        //     height: 720,
-        //     left: canvas.width / 2,
-        //     top: canvas.height / 2,
-        //     scaleX: 1,
-        //     scaleY: 1
-        //   });
-        //   canvas.add(pug);
-        // };
-        // pugImg.src = this.url;
-        // this.image.src = this.url;
+
         fabric.Image.fromURL(this.url, function(img) {
           canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
             scaleX: canvas.width / img.width,
@@ -70,23 +75,12 @@ export class AppComponent implements OnInit, AfterViewInit {
           });
         });
       };
-      // let ctx: CanvasRenderingContext2D = this.myCanvas.getContext('2d');
-      // this.image.onload = () => {
-      //   ctx.clearRect(0, 0, this.myCanvas.width, this.myCanvas.height);
-      //   this.isCanvasDrawn = true;
-      //   ctx.drawImage(this.image, 0, 0, 1280, 720);
-      // };
       this.isDrawing = true;
     }
   }
 
   getClickCoords(event: any) {
     if (this.isCanvasDrawn && this.isDrawing) {
-      console.log(
-        'Coordinate x: ' + event.layerX,
-        'Coordinate y: ' + event.layerY
-      );
-
       this.newPt = {
         x: event.layerX,
         y: event.layerY
@@ -98,37 +92,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   makePolygon() {
     this.isDrawing = false;
-    console.log('right click makePolygon');
-    // this.canvas.add(this.polygon);
     console.log(this.points);
   }
 
-  //POLYGON CODE
-  points = [];
-
-  // image = new Image(); //ALREADY INITIALISED ABOVE
-  ngOnInit() {
-    this.canvas = new fabric.Canvas('canvas', { fireRightClick: true });
-    console.log('canvas check', this.canvas);
-    console.log(this.canvas.height);
-    console.log(this.canvas.width);
-    console.log('this.canvas.lowerCanvasEl', this.canvas.lowerCanvasEl);
-    this.myCanvas = this.canvas.lowerCanvasEl;
-
-    this.polygon = new fabric.Polygon(this.points, {
-      left: 0,
-      top: 0,
-      fill: 'rgba(255,0,0,0.1)',
-      strokeWidth: 1,
-      stroke: 'lightgrey',
-      scaleX: 1,
-      scaleY: 1,
-      objectCaching: false,
-      transparentCorners: false,
-      cornerColor: 'blue'
-    });
-    this.canvas.viewportTransform = [1, 0, 0, 1, 0, 0];
-  }
+  //POLYGON EDIT CODE
 
   public Edit() {
     function polygonPositionHandler(dim, finalMatrix, fabricObject) {
