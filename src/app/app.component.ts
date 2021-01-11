@@ -132,7 +132,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       top: 0,
       fill: 'lightyellow',
       strokeWidth: 1,
-      stroke: 'green',
+      stroke: 'lightgrey',
       scaleX: 4,
       scaleY: 4,
       objectCaching: false,
@@ -221,11 +221,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         });
         return acc;
       }, {});
-    } else {
-      poly.cornerColor = 'blue';
-      poly.cornerStyle = 'rect';
-      poly.controls = fabric.Object.prototype['controls'];
     }
+    // else {
+    //   poly.cornerColor = 'blue';
+    //   poly.cornerStyle = 'rect';
+    //   poly.controls = fabric.Object.prototype['controls'];
+    // }
     poly.hasBorders = !poly.edit;
     this.canvas.requestRenderAll();
   }
