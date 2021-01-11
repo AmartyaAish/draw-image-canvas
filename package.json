@@ -21,6 +21,7 @@
     "@angular/router": "~11.0.4",
     "@types/fabric": "^4.2.1",
     "fabric": "^4.3.0",
+    "ngx-polygon-draw": "^1.0.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

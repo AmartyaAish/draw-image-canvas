@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
+// import * as NgxPolygonDraw from '@ngx-polygon-draw';
+// import { NgxPolygonDrawComponent } from 'ngx-polygon-draw';
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, AppRoutingModule],

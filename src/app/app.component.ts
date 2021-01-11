@@ -62,14 +62,20 @@ export class AppComponent implements OnInit, AfterViewInit {
         //   canvas.add(pug);
         // };
         // pugImg.src = this.url;
-        this.image.src = this.url;
+        // this.image.src = this.url;
+        fabric.Image.fromURL(this.url, function(img) {
+          canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+            scaleX: canvas.width / img.width,
+            scaleY: canvas.height / img.height
+          });
+        });
       };
-      let ctx: CanvasRenderingContext2D = this.myCanvas.getContext('2d');
-      this.image.onload = () => {
-        ctx.clearRect(0, 0, this.myCanvas.width, this.myCanvas.height);
-        this.isCanvasDrawn = true;
-        ctx.drawImage(this.image, 0, 0, 1280, 720);
-      };
+      // let ctx: CanvasRenderingContext2D = this.myCanvas.getContext('2d');
+      // this.image.onload = () => {
+      //   ctx.clearRect(0, 0, this.myCanvas.width, this.myCanvas.height);
+      //   this.isCanvasDrawn = true;
+      //   ctx.drawImage(this.image, 0, 0, 1280, 720);
+      // };
     }
   }
 
@@ -111,16 +117,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.polygon = new fabric.Polygon(this.points, {
       left: 0,
       top: 0,
-      fill: 'lightyellow',
+      fill: 'rgba(255,0,0,0.1)',
       strokeWidth: 1,
       stroke: 'lightgrey',
-      scaleX: 4,
-      scaleY: 4,
+      scaleX: 1,
+      scaleY: 1,
       objectCaching: false,
       transparentCorners: false,
       cornerColor: 'blue'
     });
-    this.canvas.viewportTransform = [0.25, 0, 0, 0.25, 0, 0];
+    this.canvas.viewportTransform = [1, 0, 0, 1, 0, 0];
   }
 
   public Edit() {
