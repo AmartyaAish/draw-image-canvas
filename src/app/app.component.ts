@@ -41,13 +41,27 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   selectFile(event: any): void {
-    // var canvas = new fabric.Canvas('canvas');
+    var canvas = this.canvas;
     if (event.target.files) {
       var reader = new FileReader();
       let file = event.target.files[0];
       reader.readAsDataURL(file);
       reader.onload = (event: any) => {
         this.url = event.target.result;
+        // var pugImg = this.image;
+        // pugImg.onload = function(img) {
+        //   var pug = new fabric.Image(pugImg, {
+        //     angle: 0,
+        //     width: 1280,
+        //     height: 720,
+        //     left: canvas.width / 2,
+        //     top: canvas.height / 2,
+        //     scaleX: 1,
+        //     scaleY: 1
+        //   });
+        //   canvas.add(pug);
+        // };
+        // pugImg.src = this.url;
         this.image.src = this.url;
       };
       let ctx: CanvasRenderingContext2D = this.myCanvas.getContext('2d');
@@ -56,35 +70,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.isCanvasDrawn = true;
         ctx.drawImage(this.image, 0, 0, 1280, 720);
       };
-      // fabric.Image.fromURL(this.url, function(img) {
-      //   canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-      //     scaleX: canvas.width / img.width,
-      //     scaleY: canvas.height / img.height
-      //   });
-      // });
     }
-    // var canvas = new fabric.Canvas('canvas');
-    // //Default
-
-    // canvas.backgroundColor = '#34AD39';
-    // canvas.renderAll();
-    // //Change background using Image
-    // document.getElementById('bg_image').addEventListener('change', function(e) {
-    //   canvas.setBackgroundColor('', canvas.renderAll.bind(canvas));
-    //   canvas.setBackgroundImage(0, canvas.renderAll.bind(canvas));
-    //   var file = e.target.files[0];
-    //   var reader = new FileReader();
-    //   reader.onload = function(f) {
-    //     var data = f.target.result;
-    //     fabric.Image.fromURL(data, function(img) {
-    //       canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-    //         scaleX: canvas.width / img.width,
-    //         scaleY: canvas.height / img.height
-    //       });
-    //     });
-    //   };
-    //   reader.readAsDataURL(file);
-    // });
   }
 
   getClickCoords(event: any) {
@@ -110,10 +96,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log(this.points);
   }
 
-  // clearPolygon() {
-  //   this.points = [];
-  // }
-
   //POLYGON CODE
   points = [];
 
@@ -121,11 +103,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.canvas = new fabric.Canvas('canvas', { fireRightClick: true });
     console.log('canvas check', this.canvas);
+    console.log(this.canvas.height);
+    console.log(this.canvas.width);
     console.log('this.canvas.lowerCanvasEl', this.canvas.lowerCanvasEl);
     this.myCanvas = this.canvas.lowerCanvasEl;
-    // this.canvas.isDrawingMode = true;
-    // this.canvas.freeDrawingBrush.color = 'green';
-    // this.canvas.freeDrawingBrush.width = 50;
 
     this.polygon = new fabric.Polygon(this.points, {
       left: 0,
@@ -140,12 +121,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       cornerColor: 'blue'
     });
     this.canvas.viewportTransform = [0.25, 0, 0, 0.25, 0, 0];
-    // this.canvas.add(this.polygon);
-    // console.log('isCanvasDrawn', this.isCanvasDrawn);
   }
 
   public Edit() {
-    // this.canvas.isDrawingMode = false;
     function polygonPositionHandler(dim, finalMatrix, fabricObject) {
       let x =
           fabricObject.points[this.pointIndex].x - fabricObject.pathOffset.x,
@@ -222,11 +200,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         return acc;
       }, {});
     }
-    // else {
-    //   poly.cornerColor = 'blue';
-    //   poly.cornerStyle = 'rect';
-    //   poly.controls = fabric.Object.prototype['controls'];
-    // }
+
     poly.hasBorders = !poly.edit;
     this.canvas.requestRenderAll();
   }
