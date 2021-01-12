@@ -5,7 +5,14 @@
 </div>
 <p>Right Click To Confirm Polygon</p>
 <div>
-  <button id="edit" (click)="Edit()">Edit Polygon</button>
+  <button id="edit" (click)="Edit()" [disabled]="!isPolygonDrawn">
+    Edit Polygon
+  </button>
+</div>
+<div>
+  <button id="edit" (click)="copyCoords()" [disabled]="!isPolygonDrawn">
+    Copy Coordinates
+  </button>
 </div>
 <div></div>
 <canvas

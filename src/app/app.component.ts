@@ -21,9 +21,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   isCanvasDrawn: boolean = true;
   canvas: any;
   polygon: any;
-  isDrawing: boolean = false;
+  isImageDrawn: boolean = false;
+  isPolygonDrawn: boolean = false;
   points = [];
   newPt: any;
+
   constructor() {}
 
   ngOnInit() {
@@ -34,7 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       left: 0,
       top: 0,
       fill: 'rgba(255,0,0,0.1)',
-      strokeWidth: 1.5,
+      strokeWidth: 1,
       stroke: 'lightgrey',
       scaleX: 1,
       scaleY: 1,
@@ -55,6 +57,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.canvas.on('mouse:down', event => {
       if (event.button === 3) {
         this.makePolygon();
+        this.isPolygonDrawn = true;
       }
     });
   }
@@ -75,12 +78,12 @@ export class AppComponent implements OnInit, AfterViewInit {
           });
         });
       };
-      this.isDrawing = true;
+      this.isImageDrawn = true;
     }
   }
 
   getClickCoords(event: any) {
-    if (this.isCanvasDrawn && this.isDrawing) {
+    if (this.isCanvasDrawn && this.isImageDrawn) {
       this.newPt = {
         x: event.layerX,
         y: event.layerY
@@ -91,8 +94,39 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   makePolygon() {
-    this.isDrawing = false;
+    this.isImageDrawn = false;
     console.log(this.points);
+  }
+
+  copyCoords() {
+    if (this.points.length >= 3) {
+      let polygonStr = 'POLYGON((';
+      let close = '))';
+      let sp = ' ';
+      let com = ', ';
+      for (let i = 0; i < this.points.length - 1; i++) {
+        let tempX = (this.points[i].x / 1280).toFixed(10);
+        let tempY = (this.points[i].y / 720).toFixed(10);
+        tempX = tempX.toString();
+        tempY = tempY.toString();
+        polygonStr = polygonStr.concat(tempX, sp, tempY, com);
+      }
+      let last = this.points[this.points.length - 1];
+      let tempX = (last.x / 1280).toFixed(10);
+      let tempY = (last.y / 720).toFixed(10);
+      tempX = tempX.toString();
+      tempY = tempY.toString();
+      polygonStr = polygonStr.concat(tempX, sp, tempY, close);
+      console.log(polygonStr);
+
+      //Copying Polygon to clipboard
+      let el = document.createElement('textarea');
+      el.value = polygonStr;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
   }
 
   //POLYGON EDIT CODE
